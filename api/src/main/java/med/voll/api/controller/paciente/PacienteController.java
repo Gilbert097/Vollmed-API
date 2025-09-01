@@ -1,6 +1,8 @@
 package med.voll.api.controller.paciente;
 
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
+import med.voll.api.dto.DadosAtualizarPaciente;
 import med.voll.api.dto.DadosCadastroPaciente;
 import med.voll.api.dto.DadosListagemPaciente;
 import med.voll.api.entity.Paciente;
@@ -30,5 +32,12 @@ public class PacienteController {
     @Transactional
     public Page<DadosListagemPaciente> listar(Pageable paginacao) {
         return repository.findAll(paginacao).map(DadosListagemPaciente::new);
+    }
+
+    @PutMapping
+    @Transactional
+    public void atualizar(@RequestBody @Valid DadosAtualizarPaciente dados) {
+        var paciente = repository.getReferenceById(dados.id());
+        paciente.atualizarInformacoes(dados);
     }
 }
